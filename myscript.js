@@ -1,56 +1,35 @@
-const rows = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-];
 
-let html = "";
-let counter = 1;
 
-rows.forEach(function (row) {
-  html += `<div class="label">${row}</div>`;
+function makeRows(sectionLength, rowLength, placement) {
 
-  for (let i = 0; i < 3; i++) {
-    html += `<div id="${row + counter}">${counter}</div>`;
-    counter++;
-  }
-  counter = counter + 12;
-});
+  const rows = ["a","b","c","d","e","f","g","h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t"];
 
-document.getElementById("left").innerHTML = html;
+  let html = "";
+  let counter = 1;
 
-html = "";
-counter = 1;
+  rows.forEach(function (row) {
 
-rows.forEach(function (row) {
-  counter = counter + 12;
+    switch (placement) {
+      case "left": html += `<div class="label">${row}</div>`; break;
+      case "right": counter = counter + (rowLength - sectionLength); break;
+      default: counter = counter + ((rowLength - sectionLength) / 2); break;
+    }
 
-  for (let i = 0; i < 3; i++) {
-    html += `<div id="${row + counter}">${counter}</div>`;
-    counter++;
-  }
+    for (let i = 0; i < sectionLength; i++) {
+      html += `<div class="a" id="${row + counter}">${counter}</div>`;
+      counter++;
+    }
 
-  html += `<div class="label">${row}</div>`;
-});
+    switch (placement) {
+      case "left": counter = counter + (rowLength - sectionLength); break;
+      case "right": html += `<div class="label">${row}</div>`; break;
+      default: counter = counter + ((rowLength - sectionLength) / 2); break;
+    }
 
-document.getElementById("right").innerHTML = html;
+  });
+  document.getElementById(placement).innerHTML = html;
+}
 
-html = "";
-counter = 1;
+makeRows(3, 15, "left");
+makeRows(3, 15, "right");
+makeRows(9, 15, "middle");

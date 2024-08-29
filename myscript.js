@@ -1,33 +1,4 @@
-let reservedSeats = {
-  record1: {
-    seat: "b19",
-    owner: {
-      fname: "Joe",
-      lname: "Smith",
-    },
-  },
-  record2: {
-    seat: "b20",
-    owner: {
-      fname: "Joe",
-      lname: "Smith",
-    },
-  },
-  record3: {
-    seat: "b21",
-    owner: {
-      fname: "Joe",
-      lname: "Smith",
-    },
-  },
-  record4: {
-    seat: "b22",
-    owner: {
-      fname: "Joe",
-      lname: "Smith",
-    },
-  },
-};
+let reservedSeats = {};
 
 function makeRows(sectionLength, rowLength, placement) {
   const rows = [
@@ -93,6 +64,9 @@ makeRows(3, 15, "left");
 makeRows(3, 15, "right");
 makeRows(9, 15, "middle");
 
+let selectedSeats = [];
+let seats = document.querySelectorAll(".a");
+
 for (const key in reservedSeats) {
   if (reservedSeats.hasOwnProperty(key)) {
     const obj = reservedSeats[key];
@@ -101,9 +75,6 @@ for (const key in reservedSeats) {
     document.getElementById(obj.seat).innerHTML = "R";
   }
 }
-
-let selectedSeats = [];
-let seats = document.querySelectorAll(".a");
 
 seats.forEach((seat) => {
   seat.addEventListener("click", () => {
@@ -125,7 +96,7 @@ function reserveSeat(seat) {
 
     manageConfirmForm();
 
-    console.log(selectedSeats);
+    //console.log(selectedSeats);
   }
 }
 
@@ -183,13 +154,13 @@ function processReservation() {
   let counter = 1;
   let nextRecord = "";
 
-  selectedSeats.forEach((thisSeat) => {
-    document.getElementById(thisSeat).className = "r";
-    document.getElementById(thisSeat).innerHTML = "R";
+  selectedSeats.forEach((seat) => {
+    document.getElementById(seat).className = "r";
+    document.getElementById(seat).innerHTML = "R";
 
     nextRecord = `record${hardCodeRecords + counter}`;
     reservedSeats[nextRecord] = {
-      seat: thisSeat,
+      seat: seat,
       owner: {
         fname: fname,
         lname: lname,
@@ -203,5 +174,5 @@ function processReservation() {
   selectedSeats = [];
   manageConfirmForm();
 
-  console.log(reservedSeats);
+  console.log(hardCodeRecords);
 }

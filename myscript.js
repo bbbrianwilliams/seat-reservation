@@ -111,20 +111,22 @@ seats.forEach((seat) => {
   });
 });
 
-function reserveSeat(thisSeat) {
-  let index = selectedSeats.indexOf(thisSeat);
+function reserveSeat(seat) {
+  if (!document.getElementById(seat).classList.contains("r")) {
+    let index = selectedSeats.indexOf(seat);
 
-  if (index > -1) {
-    selectedSeats.splice(index, 1);
-    document.getElementById(thisSeat).className = "a";
-  } else {
-    selectedSeats.push(thisSeat);
-    document.getElementById(thisSeat).className = "s";
+    if (index > -1) {
+      selectedSeats.splice(index, 1);
+      document.getElementById(seat).className = "a";
+    } else {
+      selectedSeats.push(seat);
+      document.getElementById(seat).className = "s";
+    }
+
+    manageConfirmForm();
+
+    console.log(selectedSeats);
   }
-
-  manageConfirmForm();
-
-  console.log(selectedSeats);
 }
 
 document.getElementById("reserve").addEventListener("click", (event) => {
@@ -142,6 +144,19 @@ document.getElementById("cancel").addEventListener("click", (event) => {
 function manageConfirmForm() {
   if (selectedSeats.length > 0) {
     document.getElementById("confirmres").style.display = "block";
+
+    if (selectedSeats.length === 1) {
+      document.getElementById(
+        "selectedseats"
+      ).innerHTML = `You have selected seat ${selectedSeats[0]}`;
+    } else {
+      let seatString = selectedSeats.toString();
+      seatString = seatString.replace(/,/g, ", ");
+      seatString = seatString.replace(/,(?=[^,]*$)/, " and");
+      document.getElementById(
+        "selectedseats"
+      ).innerHTML = `You have selected seats ${seatString}`;
+    }
   } else {
     document.getElementById("confirmres").style.display = "none";
 
@@ -155,3 +170,38 @@ function manageConfirmForm() {
 }
 
 manageConfirmForm();
+
+document.getElementById("confirmres").addEventListener("submit", (event) => {
+  event.preventDefault();
+  processReservation();
+});
+
+function processReservation() {
+  const hardCodeRecords = Object.keys(reservedSeats).length;
+  const fname = document.getElementById("fname").value;
+  const lname = document.getElementById("lname").value;
+  let counter = 1;
+  let nextRecord = "";
+
+  selectedSeats.forEach((thisSeat) => {
+    document.getElementById(thisSeat).className = "r";
+    document.getElementById(thisSeat).innerHTML = "R";
+
+    nextRecord = `record${hardCodeRecords + counter}`;
+    reservedSeats[nextRecord] = {
+      seat: thisSeat,
+      owner: {
+        fname: fname,
+        lname: lname,
+      },
+    };
+
+    counter++;
+  });
+
+  document.getElementById("resform").style.display = "none";
+  selectedSeats = [];
+  manageConfirmForm();
+
+  console.log(reservedSeats);
+}
